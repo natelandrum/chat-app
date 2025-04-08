@@ -15,12 +15,13 @@ export default auth((req) => {
   const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
 
   if (isPublicRoute && isAuthenticated) {
-    return Response.redirect(new URL(DEFAULT_REDIRECT, req.url));
+    return Response.redirect(new URL(DEFAULT_REDIRECT, nextUrl.origin));
   }
 
   if (!isAuthenticated && !isPublicRoute) {
-    return Response.redirect(new URL(ROOT, req.url));
+    return Response.redirect(new URL(ROOT, nextUrl.origin));
   }
+
   return NextResponse.next();
 });
 
