@@ -1,8 +1,5 @@
-import NextAuth from 'next-auth';
-import { authOptions } from './app/auth.config';
-import { NextResponse } from 'next/server';
-
-const { auth } = NextAuth(authOptions);
+import { auth } from "@/auth"
+import { NextResponse } from "next/server";
 
 const PUBLIC_ROUTES = ['/signin'];
 const DEFAULT_REDIRECT = '/';
