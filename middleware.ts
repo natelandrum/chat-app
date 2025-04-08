@@ -9,20 +9,25 @@ const DEFAULT_REDIRECT = '/';
 const ROOT = '/signin';
 
 export default auth((req) => {
-  const { nextUrl } = req;
+  const { nextUrl, url } = req;
 
   const isAuthenticated = !!req.auth;
   const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
 
-  if (isPublicRoute && isAuthenticated) {
-    return Response.redirect(new URL(DEFAULT_REDIRECT, nextUrl.origin));
-  }
+  try {
+    if (isPublicRoute && isAuthenticated) {
+      return Response.redirect(new URL(DEFAULT_REDIRECT, req.url));
+    }
 
-  if (!isAuthenticated && !isPublicRoute) {
-    return Response.redirect(new URL(ROOT, nextUrl.origin));
-  }
+    if (!isAuthenticated && !isPublicRoute) {
+      return Response.redirect(new URL(ROOT, req.url));
+    }
 
-  return NextResponse.next();
+    return NextResponse.next();
+  } catch (err) {
+    console.error('Middleware failed:', err);
+    return new Response('Middleware error', { status: 500 });
+  }
 });
 
 export const config = {
