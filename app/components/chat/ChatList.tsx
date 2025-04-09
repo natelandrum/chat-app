@@ -3,15 +3,19 @@
 import { usePaginatedChats } from "@/lib/hooks/usePaginatedChats";
 import Loading from "@/loading";
 import { useEffect, useRef } from "react";
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import clsx from "clsx";
 import Link from "next/link";
-import { Chat } from "@/lib/definitions";
+import { Chat, PaginatedQueryData } from "@/lib/definitions";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ChatList() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     usePaginatedChats();
 
+  const queryClient = useQueryClient();
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -42,6 +46,29 @@ export default function ChatList() {
 
   const uniqueChats = Array.from(uniqueChatsMap.values());
 
+  const handleDelete = async (id: string) => {
+    if (!confirm(
+      "Are you sure you want to delete this chat? This action cannot be undone."
+    )) return;
+
+    const res = await axios.delete(`/api/chats/`, {
+      data: JSON.stringify({ conversation_id: id }),
+    });
+
+    if (res.status === 200) {
+      queryClient.setQueryData(["chats"], (oldData: PaginatedQueryData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            chats: page.chats?.filter((chat: Chat) => chat.id !== id),
+          })),
+        };
+      });
+    }
+  };
+
   if (status === "pending") return <Loading />;
   if (status === "error" || data.pages?.[0].chats.length === 0) {
     const isError = status === "error";
@@ -68,19 +95,45 @@ export default function ChatList() {
   return (
     <div className="flex flex-col p-4 mt-12 gap-3 max-w-xl mx-auto">
       {uniqueChats.map((chat: Chat) => (
-        <Link key={chat.id} href={`/chat/${chat.id}?chatName=${chat.name}`}>
-          <div className="bg-gray-800 text-white p-4 rounded shadow flex flex-row items-center justify-between gap-4">
-            <div className="flex flex-col">
-              <h3 className="text-lg font-bold truncate">{chat.name}</h3>
-              <p className="text-sm text-gray-400 truncate">
-                {chat.last_message_preview || "No messages yet"}
-              </p>
-            </div>
-            <div className="flex-shrink-0 text-sm text-gray-400">
-              Members: {chat.members.length}
-            </div>
+        <div
+          key={chat.id}
+          className="bg-gray-800 text-white rounded shadow hover:bg-gray-700 transition-colors"
+        >
+          <div className="flex items-center justify-between">
+            <Link
+              href={`/chat/${chat.id}?chatName=${chat.name}`}
+              className="flex-grow p-4"
+            >
+              <div className="flex flex-row items-center justify-between gap-4">
+                <div className="flex flex-col">
+                  <h3 className="text-lg font-bold truncate">{chat.name}</h3>
+                  <p className="text-sm text-gray-400 truncate">
+                    {chat.last_message_preview || "No messages yet"}
+                  </p>
+                </div>
+                <div className="flex-shrink-0 text-sm text-gray-400">
+                  Members: {chat.members.length}
+                </div>
+              </div>
+            </Link>
+            <IconButton
+              onClick={(e) => {
+                e.preventDefault();
+                handleDelete(chat.id);
+              }}
+              aria-label="Delete chat"
+              sx={{
+                color: "gray",
+                "&:hover": {
+                  color: "red",
+                  scale: 1.2,
+                },
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
           </div>
-        </Link>
+        </div>
       ))}
 
       <div ref={loaderRef} className="h-12">

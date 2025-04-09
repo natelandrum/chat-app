@@ -1,4 +1,4 @@
-import { auth } from "@/auth"; // NextAuth handler
+import { auth } from "@/auth";
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -95,4 +95,25 @@ if (!participants.includes(session.user.id)) {
   await sql`INSERT INTO conversation_participants (conversation_id, user_id) VALUES (${chatId}, ${session.user.id})`;
 }
   return NextResponse.json({ message: "Chat created", id: chatId });
+}
+
+export async function DELETE(req: Request) {
+  const session = await auth();
+  if (!session || !session.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { conversation_id } = await req.json();
+
+  if (!conversation_id) {
+    return NextResponse.json({ error: "Missing conversation_id" }, { status: 400 });
+  }
+
+  try {
+    await sql`DELETE FROM conversations WHERE id = ${conversation_id}`;
+    return NextResponse.json({ message: "Chat deleted" });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Failed to delete chat" }, { status: 500 });
+  }
 }
