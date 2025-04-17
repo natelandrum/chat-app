@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Modal, Typography } from "@mui/material";
+import { Button, Modal, Typography, Box } from "@mui/material";
 import { useIdleLogout } from "@/lib/hooks/useIdleLogout";
 import { signOut } from "next-auth/react";
 import { useEffect } from "react";
@@ -15,7 +15,6 @@ export default function SessionWatcher() {
   const { timeLeft, modalOpen, resetTimer, closeModal } = useIdleLogout();
   const currentUserId = useSelector((state: RootState) => state.user.currentUserId);
 
-
   const minutes = Math.floor(timeLeft / 60_000);
   const seconds = Math.floor((timeLeft % 60_000) / 1000);
 
@@ -29,59 +28,82 @@ export default function SessionWatcher() {
   }, []);
 
   useEffect(() => {
-if (
-  status === "authenticated" &&
-  session?.user?.id &&
-  session.user.id !== currentUserId
-) {
-  dispatch(setCurrentUserId(session.user.id));
-  dispatch(
-    upsertKnownUsers([
-      {
-        id: session.user.id,
-        name: session.user.name || "",
-        email: session.user.email || "",
-        image: session.user.image || "",
-      },
-    ])
-  );
-}
+    if (
+      status === "authenticated" &&
+      session?.user?.id &&
+      session.user.id !== currentUserId
+    ) {
+      dispatch(setCurrentUserId(session.user.id));
+      dispatch(
+        upsertKnownUsers([
+          {
+            id: session.user.id,
+            name: session.user.name || "",
+            email: session.user.email || "",
+            image: session.user.image || "",
+          },
+        ])
+      );
+    }
   }, [session, status, currentUserId, dispatch]);
 
   return (
-    <Modal open={modalOpen} onClose={closeModal}>
-      <div
-        style={{
-          padding: "24px",
-          background: "#fff",
-          borderRadius: "10px",
-          width: "90%",
-          maxWidth: "400px",
-          margin: "15% auto",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-          textAlign: "center",
+    <Modal 
+      open={modalOpen} 
+      onClose={closeModal}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Box
+        sx={{
+          bgcolor: '#fff',
+          borderRadius: 2,
+          boxShadow: 24,
+          p: { xs: 3, md: 4 },
+          width: { xs: '85%', sm: '400px' },
+          maxWidth: '450px',
+          textAlign: 'center',
+          mx: 2,
         }}
       >
         <Typography 
-        variant="h6" 
-        sx={{ color: "#1a1a1a" }}
+          variant="h6" 
+          sx={{ 
+            color: "#1a1a1a",
+            fontSize: { xs: '1.1rem', md: '1.25rem' }
+          }}
         >
           Session Expiry Warning
         </Typography>
         <Typography
           variant="body1"
-          sx={{ color: "#1a1a1a", 
-                marginTop: "8px" 
-              }}
+          sx={{ 
+            color: "#1a1a1a", 
+            mt: 1.5,
+            mb: 2.5,
+            fontSize: { xs: '0.9rem', md: '1rem' }
+          }}
         >
           Your session will expire in: {minutes}:
           {seconds.toString().padStart(2, "0")}
         </Typography>
-        <div style={{ marginTop: "24px" }}>
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            justifyContent: 'center',
+            gap: 2,
+            flexDirection: { xs: 'column', sm: 'row' }
+          }}
+        >
           <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={resetTimer}
+            variant="contained" 
+            color="primary" 
+            onClick={resetTimer}
+            fullWidth
+            sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
           >
             Continue Session
           </Button>
@@ -92,12 +114,13 @@ if (
               closeModal();
               signOut();
             }}
-            style={{ marginLeft: "12px" }}
+            fullWidth
+            sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
           >
             Sign Out
           </Button>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </Modal>
   );
 }

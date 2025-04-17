@@ -21,6 +21,7 @@ import { Message, PaginatedQueryData } from "@/lib/definitions";
 import { upsertKnownUsers } from "@/lib/redux/user/userSlice";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import SendIcon from "@mui/icons-material/Send";
 
 interface ChatMessagesProps {
   roomId: string;
@@ -178,26 +179,27 @@ export default function ChatMessages({ roomId, chatName }: ChatMessagesProps) {
       sx={{
         bgcolor: "background.default",
         color: "text.primary",
-        mt: 4,
-        p: 2,
-        height: "90vh",
+        mt: { xs: 2, md: 4 },
+        p: { xs: 1, md: 2 },
+        height: { xs: "calc(100vh - 160px)" },
         display: "flex",
         flexDirection: "column",
-        borderRadius: 2,
-        width: "80%",
+        borderRadius: { xs: 1, md: 2 },
+        width: "95%",
         maxWidth: "600px",
         mx: "auto",
-        my: 8,
       }}
     >
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">{chatName}</Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1} px={1}>
+        <Typography variant="h6" sx={{ fontSize: { xs: '1rem', md: '1.25rem' }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
+          {chatName}
+        </Typography>
         {userList.length > 0 && (
-          <Box color="text.secondary" fontSize="small">
+          <Box color="text.secondary" fontSize={{ xs: 'x-small', md: 'small' }}>
             {userList.slice(0, 2).map((u, i) => (
-              <div key={u?.id}>
+              <div key={u?.id} className="truncate max-w-[100px]">
                 {u?.name || u?.email}
-                {i === 0 && ", "}
+                {i === 0 && userList.length > 1 && ", "}
               </div>
             ))}
             {userList.length > 2 && (
@@ -226,10 +228,10 @@ export default function ChatMessages({ roomId, chatName }: ChatMessagesProps) {
           overflowY: "auto",
           border: 1,
           borderColor: "divider",
-          p: 2,
-          borderRadius: 2,
+          p: { xs: 1, md: 2 },
+          borderRadius: { xs: 1, md: 2 },
           bgcolor: "background.paper",
-          mb: 2,
+          mb: { xs: 1, md: 2 },
         }}
       >
         {paginationStatus === "pending" && (
@@ -244,33 +246,43 @@ export default function ChatMessages({ roomId, chatName }: ChatMessagesProps) {
           ) : null;
         })}
         <div ref={loaderRef}>
-          {isFetchingNextPage && <CircularProgress size={24} />}
+          {isFetchingNextPage && <CircularProgress size={20} />}
         </div>
       </Box>
 
-      <Box display="flex" gap={2}>
+      <Box display="flex" gap={1} px={1}>
         <TextField
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.ctrlKey && e.key === "Enter") {
+            if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
               e.preventDefault();
               sendMessage();
             }
           }}
           fullWidth
           multiline
+          maxRows={3}
           placeholder="Type a message..."
           variant="outlined"
           size="small"
+          sx={{ 
+            '& .MuiOutlinedInput-root': {
+              fontSize: { xs: '0.875rem', md: '1rem' }
+            }
+          }}
         />
         <Button
           onClick={sendMessage}
           variant="contained"
           color="primary"
-          sx={{ fontWeight: "bold" }}
+          sx={{ 
+            minWidth: { xs: '40px', md: 'auto' },
+            px: { xs: 1, md: 2 }
+          }}
         >
-          Send
+          <SendIcon fontSize="small" sx={{ display: { xs: 'block', md: 'none' } }} />
+          <span className="hidden md:inline">Send</span>
         </Button>
       </Box>
     </Paper>

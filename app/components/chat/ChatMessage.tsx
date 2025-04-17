@@ -127,23 +127,23 @@ function ChatMessage({
   return (
     <>
       {currentDate !== previousDate && (
-        <div className="text-center text-gray-500 my-4">{previousDate}</div>
+        <div className="text-center text-gray-500 my-2 md:my-4 text-xs md:text-sm">{previousDate}</div>
       )}
       <div
         className={clsx(
-          "flex mb-4 mr-0",
+          "flex mb-2 md:mb-4 mr-0",
           isCurrentUser ? "justify-end" : "justify-start"
         )}
       >
         <div
           className={clsx(
-            "flex group flex-col relative",
+            "flex group flex-col relative max-w-[80%] md:max-w-[75%]",
             isCurrentUser ? "items-end" : "items-start"
           )}
         >
           <div
             className={clsx(
-              "px-4 py-2 w-fit max-w-[50vw] rounded-4xl",
+              "px-3 py-2 md:px-4 md:py-2 w-fit rounded-2xl md:rounded-4xl text-sm md:text-base",
               isCurrentUser
                 ? "bg-blue-500 text-white"
                 : "bg-gray-700 text-white"
@@ -155,7 +155,7 @@ function ChatMessage({
                   e.preventDefault();
                   handleEdit();
                 }}
-                className="space-y-2"
+                className="space-y-1 md:space-y-2"
               >
                 <TextField
                   value={editedText}
@@ -163,12 +163,17 @@ function ChatMessage({
                   size="small"
                   fullWidth
                   autoFocus
+                  sx={{ 
+                    '& .MuiInputBase-input': {
+                      fontSize: { xs: '0.875rem', md: '1rem' }
+                    }
+                  }}
                 />
-                <div className="flex justify-end gap-2">
+                <div className="flex justify-end gap-1 md:gap-2">
                   <Button
                     onClick={() => setIsEditing(false)}
                     size="small"
-                    sx={{ color: "white" }}
+                    sx={{ color: "white", fontSize: { xs: '0.75rem', md: '0.875rem' } }}
                   >
                     Cancel
                   </Button>
@@ -177,13 +182,14 @@ function ChatMessage({
                     type="submit"
                     variant="contained"
                     size="small"
+                    sx={{ fontSize: { xs: '0.75rem', md: '0.875rem' } }}
                   >
                     Save
                   </Button>
                 </div>
               </form>
             ) : (
-              msg.content
+              <div className="break-words">{msg.content}</div>
             )}
           </div>
 
@@ -192,10 +198,11 @@ function ChatMessage({
               <IconButton
                 size="small"
                 onClick={handleMenuOpen}
-                className="absolute -top-8 h-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                className="absolute -top-6 md:-top-8 h-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                 sx={{
                   transform: "translate(50%, -50%)",
                   zIndex: 10,
+                  padding: { xs: '3px', md: '4px' }
                 }}
               >
                 <MoreVertIcon
@@ -204,6 +211,7 @@ function ChatMessage({
                     color: "white",
                     backgroundColor: "black",
                     borderRadius: "50%",
+                    fontSize: { xs: '1rem', md: '1.25rem' }
                   }}
                 />
               </IconButton>
@@ -219,18 +227,21 @@ function ChatMessage({
                     setIsEditing(true);
                     setAnchor(null);
                   }}
+                  sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
                 >
                   Edit
                 </MenuItem>
-                <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                <MenuItem onClick={handleDelete} sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}>
+                  Delete
+                </MenuItem>
               </Menu>
             </>
           )}
 
           <div
             className={clsx(
-              "text-gray-400 opacity-0 group-hover:opacity-100 text-[12px]",
-              isCurrentUser ? "mr-4 -m-[0.6rem]" : "ml-4"
+              "text-gray-400 opacity-0 group-hover:opacity-100 text-[10px] md:text-[12px]",
+              isCurrentUser ? "mr-2 md:mr-4 -mt-1 md:-m-[0.6rem]" : "ml-2 md:ml-4"
             )}
           >
             {new Date(msg.created_at).toLocaleTimeString([], {
@@ -247,14 +258,14 @@ function ChatMessage({
             className={clsx(
               "rounded-full absolute",
               isCurrentUser
-                ? "bottom-0 right-0 translate-x-1/2 -translate-y-1/12"
-                : "bottom-0 left-0 -translate-x-1/2 -translate-y-1/2"
+                ? "bottom-0 right-0 translate-x-1/2 -translate-y-1/12 w-4 h-4 md:w-5 md:h-5"
+                : "bottom-0 left-0 -translate-x-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5"
             )}
           />
         </div>
       </div>
       {!nextDate && (
-        <div className="text-center text-gray-500 my-4">{previousDate}</div>
+        <div className="text-center text-gray-500 my-2 md:my-4 text-xs md:text-sm">{previousDate}</div>
       )}
     </>
   );

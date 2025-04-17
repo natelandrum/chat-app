@@ -93,7 +93,7 @@ export default function ChatList() {
   }
 
   return (
-    <div className="flex flex-col p-4 mt-12 gap-3 max-w-xl mx-auto">
+    <div className="flex flex-col p-3 md:p-4 mt-4 md:mt-12 gap-2 md:gap-3 w-full max-w-full md:max-w-xl mx-auto">
       {uniqueChats.map((chat: Chat) => (
         <div
           key={chat.id}
@@ -102,16 +102,16 @@ export default function ChatList() {
           <div className="flex items-center justify-between">
             <Link
               href={`/chat/${chat.id}?chatName=${chat.name}`}
-              className="flex-grow p-4"
+              className="flex-grow p-2 md:p-4 overflow-hidden"
             >
-              <div className="flex flex-row items-center justify-between gap-4">
-                <div className="flex flex-col">
-                  <h3 className="text-lg font-bold truncate">{chat.name}</h3>
-                  <p className="text-sm text-gray-400 truncate">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-1 md:gap-4">
+                <div className="flex flex-col w-full md:w-auto">
+                  <h3 className="text-base md:text-lg font-bold truncate">{chat.name}</h3>
+                  <p className="text-xs md:text-sm text-gray-400 truncate max-w-[200px] md:max-w-[250px]">
                     {chat.last_message_preview || "No messages yet"}
                   </p>
                 </div>
-                <div className="flex-shrink-0 text-sm text-gray-400">
+                <div className="flex-shrink-0 text-xs md:text-sm text-gray-400 mt-1 md:mt-0">
                   Members: {chat.members.length}
                 </div>
               </div>
@@ -124,20 +124,21 @@ export default function ChatList() {
               aria-label="Delete chat"
               sx={{
                 color: "gray",
+                padding: { xs: "4px", md: "8px" },
                 "&:hover": {
                   color: "red",
                   scale: 1.2,
                 },
               }}
             >
-              <DeleteIcon />
+              <DeleteIcon fontSize="small" />
             </IconButton>
           </div>
         </div>
       ))}
 
-      <div ref={loaderRef} className="h-12">
-        {isFetchingNextPage && <p className="text-center">Loading more...</p>}
+      <div ref={loaderRef} className="h-10 md:h-12">
+        {isFetchingNextPage && <p className="text-center text-sm md:text-base">Loading more...</p>}
       </div>
     </div>
   );

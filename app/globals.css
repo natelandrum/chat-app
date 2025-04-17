@@ -24,3 +24,40 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  .h-screen {
+    height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* Reset flex direction only for specific components that need it */
+  .mobile-stack {
+    flex-direction: column;
+  }
+
+  .mobile-center {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mobile-p {
+    padding: 0.75rem;
+  }
+
+  .mobile-text-sm {
+    font-size: 0.875rem;
+  }
+
+  /* Touch target sizing for better mobile accessibility */
+  button, a, .clickable {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
