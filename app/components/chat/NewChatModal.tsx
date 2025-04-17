@@ -95,13 +95,6 @@ export default function NewChatModal() {
       onClose={handleCloseModal}
       fullWidth
       maxWidth="sm"
-      PaperProps={{
-        sx: {
-          borderRadius: { xs: 2, md: 2 },
-          width: { xs: '95%', sm: '80%', md: 'auto' },
-          m: { xs: 2, md: 'auto' },
-        }
-      }}
     >
       {loading && (
         <div className="fixed top-0 left-0 w-full h-full bg-opacity-50 z-50 flex justify-center items-center">
@@ -158,11 +151,6 @@ export default function NewChatModal() {
               }}
             />
           )}
-          ListboxProps={{
-            style: {
-              maxHeight: '200px'
-            }
-          }}
         />
 
         <div className="flex justify-end gap-2 pt-2">

@@ -10,12 +10,12 @@ import ReturnToChatList from "../chat/ReturnToChatList";
 export default async function NavBar() {
     const session = await auth();
     return (
-      <div className="flex flex-col md:flex-row justify-between items-center p-4 md:p-4 bg-gray-800 text-white">
+      <>
+        {session ? <ReturnToChatList /> : null}
+      <div className="flex flex-col md:flex-row justify-between p-4 md:p-4 bg-gray-800 text-white">
+        
         <Link href="/">
-          <div className="relative w-full flex justify-center md:justify-center items-center text-xl md:text-2xl mb-3 md:mb-0">
-            <div className="absolute left-0 top-0 md:relative md:left-auto md:top-auto">
-              {session ? <ReturnToChatList /> : null}
-            </div>
+          <div className="flex justify-center items-center text-xl md:text-2xl mb-3 md:mb-0">
             <Image
               src="/logo.png"
               alt="Chat App logo"
@@ -49,5 +49,6 @@ export default async function NavBar() {
           </div>
         ) : null}
       </div>
+      </>
     );
 }

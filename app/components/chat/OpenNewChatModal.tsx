@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 export default function OpenNewChatModal() {
     const dispatch = useDispatch();
     return (
-      <div className="absolute right-0 top-2 md:top-20 p-2 md:p-4">
+      <div className="absolute right-0 top-2 md:top-24 p-2 md:p-4">
         <Box
           sx={{
             position: "relative",
@@ -32,7 +32,7 @@ export default function OpenNewChatModal() {
               height: "14px",
               backgroundColor: {
                 xs: "#1E2939",
-                sm: "black",
+                md: "black",
               },
               zIndex: 1,
             },

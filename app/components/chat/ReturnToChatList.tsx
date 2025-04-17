@@ -16,7 +16,7 @@ export default function ReturnToChatList() {
   }, [pathname]);
 
   return (
-    <div className={clsx("fixed hover:scale-110 transition-transform left-2 top-20 md:top-30 p-2 md:p-4 lg:text-nowrap", {
+    <div className={clsx("absolute hover:scale-110 transition-transform left-0 top-20 md:top-28 p-2 md:p-4 lg:text-nowrap", {
       hidden: isHomePage
     })}>
       <Link 

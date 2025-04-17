@@ -179,7 +179,7 @@ export default function ChatMessages({ roomId, chatName }: ChatMessagesProps) {
       sx={{
         bgcolor: "background.default",
         color: "text.primary",
-        mt: { xs: 2, md: 4 },
+        my: "16px",
         p: { xs: 1, md: 2 },
         height: { xs: "calc(100vh - 160px)" },
         display: "flex",
