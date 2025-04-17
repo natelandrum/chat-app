@@ -1,6 +1,6 @@
 # 🗨️ Real-Time Chat App
 
-A modern, real-time chat application built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, **React Query**, **Redux Toolkit**, and **Ably** for real-time messaging.
+A modern, real-time chat application with infinite scroll, multi-user conversations, edit and delete functionality, hover menus, global state, and data persistence.
 
 ## 🚀 Features
 
